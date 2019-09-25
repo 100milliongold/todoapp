@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue todo</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Todo App</h1>
+        <input type="text" v-model="inputText" v-on:keyup.enter="addItem" />
+        <button 
+        v-on:click="addItem"
+        >add</button>
+        <div>
+            <ul>
+                <li v-for="(todoitem , index) in todoitems">
+                    {{todoitem}}
+                    <button v-on:click="removeItem(todoitem , index)">remove</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            created :function(){
+                this.fetchItems();
+            },
+            el:'#app',
+            data:{
+                inputText:'',
+                todoitems:[],
+            },
+            methods:{
+                'addItem' : function (event) {
+                    // if (event.keyCode === 13) {
+                        // console.log(event);
+                        var value = this.inputText;
+                        localStorage.setItem(value, value);
+                        this.inputText = '';
+                        // this.fetchItems();
+                        this.todoitems.push(value)
+                    // }
+                    
+                },
+                'fetchItems' : function (params) {
+                    for (let i = 0; i < localStorage.length; i++) {
+                        var value = localStorage.key(i);
+                        // console.log(value);
+                        // console.log(this);
+                        this.todoitems.push(value);
+                    }
+                },
+                'removeItem' : function (todoitem, index) {
+                    console.log('removed', todoitem, index);
+                    this.todoitems.splice(index,1);
+                    localStorage.removeItem(todoitem);
+                },
+            }
+        })
+    </script>
+</body>
+</html>
